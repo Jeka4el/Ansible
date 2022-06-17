@@ -1,0 +1,10 @@
+[staging_servers]
+Linix1 ansible_host=15.188.55.3 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+
+[prod_servers]
+Linix2 ansible_host=13.38.130.98 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+Linix3 ansible_host=35.180.41.155 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+
+
+
+
