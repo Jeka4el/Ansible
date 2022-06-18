@@ -1,10 +1,59 @@
+#[stading_DB]
+#10.50.1.1
+#10.51.1.2
+
+#[staging_WEB]
+#192.168.1.1
+#192.168.1.2
+
+#[staging_APP]
+#192.168.3.1
+#192.168.3.2
+
+#[staging_ALL:children]
+#[stading_DB]
+#[staging_WEB]
+#[staging_WEB]
+
+
+
+#[prod_DB]
+#10.10.1.1
+
+#prod_WEB]
+#0.10.2.2
+
+#prod_ADD]
+#0.10.3.3 
+
+#[prod_ALL:children]
+#[prod_DB]
+#[staging_WEB]
+#[prod_ADD]
+
+
+
+#[DB_ALL:children]
+#stading_DB
+#prod_DB
+
+
+
+#[APP_ALL:children]
+#staging_APP
+#prod_APP
+
+
+
 [staging_servers]
 Linix1 ansible_host=15.188.55.3 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
 
 [prod_servers]
-Linix2 ansible_host=13.38.130.98 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
-Linix3 ansible_host=35.180.41.155 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+Linix2 ansible_host=13.38.130.98 
+Linix3 ansible_host=35.180.41.155
 
-
+[prod_servers:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
 
 
