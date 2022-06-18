@@ -1,12 +1,30 @@
-[staging_servers]
-Linix1 ansible_host=35.181.154.100 ansible_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+[STAGING_SERVERS_WEB]
+Linix1 ansible_host=35.181.154.100
 
-[prod_servers]
+
+[PROD_SERVERS_WEB]
 Linix2 ansible_host=35.181.43.43 
 Linix3 ansible_host=35.180.254.213
 
-[prod_servers:vars]
-ansible_user=ubuntu
-ansible_ssh_private_key_file=/home/ubuntu/.ssh/aws-key.pem
+
+
+#[STAGING_SERVERS_DB]
+#35.181.154.107
+#35.181.154.109
+
+
+#[PROD_SERVERS_DB]
+#35.182.154.109
+#35.180 .159.109
+
+
+#[ALL_SERVERS_DB:children]
+#[STAGING_SERVERS_DB]
+#[PROD_SERVERS_DB]
+
+#[ALL_SERVERS_DB:vars]
+#db_endpoint=xxxxx.yyyyyyy.com:4151
+#owner=vasya
+#location="USA"
 
 
