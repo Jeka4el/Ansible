@@ -1,0 +1,37 @@
+m- module a- argument
+
+
+ansible all -m ping
+
+ansible all -m setup
+# Покажет инфо о серверах
+
+ansible all -m copy -a "src=privet.txt dest=/home mode=777" -b  
+#Копирую файл с мастера на серваки из хоста, src= далее путь к файлу который копирую , dest = куда, mode - не обязательно, -b запустить от root
+
+ansible all -m file -a "path=/home/privet.txt state=absent" -b
+# Удвляю этот файл, state=absent - удвлить. 
+
+ansible all -m shell -a "ls -la /home"
+# запускаю команду shell
+
+ansible all -m get_url -a "url=https://www.guru99.com/images/1/102219_1135_TCPIPvsOSIM1.png dest=/home" -b
+# Качаю файл на на все сервера (all) в dest=/home
+
+ansible all -m apt -a "name=stress state=latest" -b
+# Уствновил через apt  поледнюю версию "стресс" 
+
+ansible all -m apt -a "name=stress state=absent" -b
+# Deleted "stress"
+
+ansible all -m uri -a "url=http://google.com return_content=yes"
+# Отправил запрос на google вернет всю страницу, html и т.п. без return_content=yes" аналог head curl
+
+ansible all -m apt -a "name=apache2 state=latest" -b 
+№ Установил web-server apache
+
+ansible all -m service -a "name=apache2 state=started enabled=yes" -b
+#Зaпускаю apache (state)и добавляю в автозагрузку (enabled)
+
+
+
