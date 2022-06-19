@@ -1,10 +1,13 @@
 [STAGING_SERVERS_WEB]
-Linix1 ansible_host=35.181.154.100
+Linux1 ansible_host=35.181.154.100
 
 
 [PROD_SERVERS_WEB]
-Linix2 ansible_host=35.181.43.43 
-Linix3 ansible_host=35.180.254.213
+Linux2 ansible_host=35.181.43.43 
+Linux3 ansible_host=35.180.139.161
+
+[REDHAT_SERVERS_WEB]
+RedHat4 ansible_host=13.37.107.222
 
 
 
