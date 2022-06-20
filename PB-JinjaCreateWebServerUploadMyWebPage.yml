@@ -1,0 +1,80 @@
+---
+- name: Install Apache and Upload my Web Page
+  hosts: all
+  become: yes
+
+  vars:
+    source_folder: /home/ubuntu/web/dz11/  #source_file: /home/ubuntu/web/dz11/index.html
+    destin_folder: /var/www/html           #destin_file: /var/www/html
+
+
+  tasks:
+
+  - name: Check and print Linux Version
+    debug: var=ansible_os_family
+
+  - block: # For Debian
+
+     - name: Install Apache Web Server for Debian
+       apt: name=apache2 state=latest
+
+
+         # - name: Copy MyHomePage to servers
+         # copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+         # notify: Restart Apache Debian
+
+
+    when: ansible_os_family == "Debian"
+
+
+  - block: # For RedHat      
+      
+     - name: Install Apache Web Server for RedHat
+       yum: name=httpd state=latest
+
+
+         # - name: Copy MyHomePage to servers
+         # copy: src={{ source_file }} dest={{ destin_file }} mode=0555
+         # notify: Restart Apache RedHat
+
+
+     - name: Start Web Server service for RedHat
+       service: name=httpd state=started enabled=yes
+
+    when: ansible_os_family == "RedHat"
+
+  - name: Generate index.html file
+    template: src={{ source_folder }}/index.j2 dest={{ destin_folder }}/index.html mode=0555 # Отличие от copy в том что проверяет наличие переменных в файле.
+    notify:
+       - Restart Apache Debian
+       - Restart Apache RedHat
+
+
+
+
+  - name: Copy MyHomePage to servers
+    copy: src={{ source_folder }}/{{ item }} dest={{ destin_folder }} mode=0555  #src={{ source_file }} dest={{ destin_file }} mode=0555
+    loop:                                                                        # without 
+       - "css"
+       - "img"
+
+    notify:
+       - Restart Apache Debian
+       - Restart Apache RedHat
+
+
+
+
+
+      
+  handlers:
+  - name: Restart Apache Debian
+    service: name=apache2 state=restarted
+    when: ansible_os_family == "Debian"
+
+
+
+  - name: Restart Apache RedHat
+    service: name=httpd state=restarted
+    when: ansible_os_family == "RedHat"
+ 
