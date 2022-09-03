@@ -1,0 +1,85 @@
+---
+- name: postgresql demo
+  hosts: 10.0.1.193
+  become: true
+  vars:
+    db_name: todo_db
+    db_user: todo_user
+    db_password: jeka-123
+# Переменный можно вынести в отдельный файл и сослаться на него
+# vars_files:
+  #   - vars.yml
+  
+  tasks:
+
+ # Обновляем кеш репозиториев
+ # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
+  - name: Update repo cache
+    apt:
+      update_cache: yes
+      force_apt_get: yes 
+      cache_valid_time: 3600
+
+# Устанавливаем postgresql
+  - name: Install postgresql
+    apt: 
+      name: postgresql
+      state: latest
+
+# Стартуем postgresql
+  - name: start postgresql
+    service:
+      name: postgresql
+      state: started
+
+# Устанавливаем зависимости для работы с коллекцией community.postgresql   
+# https://docs.ansible.com/ansible/latest/collections/community/postgresql/index.html
+  - name: Install utility for python
+    ansible.builtin.package:
+      name: python3-psycopg2
+      state: present
+
+# Устанавливаем зависимости для работы с коллекцией community.postgresql   
+# https://docs.ansible.com/ansible/latest/collections/community/postgresql/index.html
+  - name: Install utility acl
+    ansible.builtin.package:
+      name: acl
+      state: present
+
+# Создаем пользователя БД 
+  - name: "Create db user"
+    community.postgresql.postgresql_user:
+      state: present
+      name: "{{ db_user }}"
+      password: "{{ db_password }}"
+    become: yes
+    become_user: postgres 
+     
+ # Создаем БД 
+  - name: Create db
+    community.postgresql.postgresql_db:
+      state: present
+      name: "{{ db_name }}"
+      owner: todo_user
+    become: true
+    become_user: postgres
+ 
+    # - name: The same as above by playbook
+    #   community.postgresql.postgresql_owner:
+    #     db: todo_db
+    #     new_owner: todo_user
+    #   become: yes
+    #   become_user: postgres
+
+# Добавляем таблицу в созданную БД
+  - name: Create test_table with several columns in ssd tablespace with fillfactor=10 and autovacuum_analyze_threshold=1
+    community.postgresql.postgresql_table:
+      db: todo_db
+      owner: todo_user
+      name: task
+      columns:
+      - id SERIAL PRIMARY KEY NOT NULL
+      - task text UNIQUE
+      - status INTEGER DEFAULT 0
+    become: yes
+    become_user: postgres        
